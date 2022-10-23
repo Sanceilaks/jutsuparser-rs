@@ -113,7 +113,7 @@ impl Anime {
     
         Ok(anime)
     }
-
+    
     pub async fn get_epidoes(&self) -> Vec<Episode> {
         let client = create_http_client();
 
