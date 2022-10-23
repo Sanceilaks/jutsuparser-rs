@@ -17,6 +17,9 @@ mod tests {
         let first_anime = anime.iter().next().expect("Cannot get anime");
         let episodes = first_anime.get_epidoes().await;
 
-        assert_eq!(episodes.iter().next().unwrap().get_name().await, "Две судьбы: парень встречает девушку")
+        let episode = episodes.iter().next().unwrap();
+
+        assert_eq!(episode.get_name().await, "Две судьбы: парень встречает девушку");
+        assert_eq!(episode.get_episode_index(), 1);
     }
 }

@@ -38,6 +38,14 @@ impl Episode {
             .unwrap().as_node().select_first("h2").unwrap()
                 .text_contents()
     }
+
+    pub fn get_episode_index(&self) -> usize {
+        let regex = regex::Regex::new(r"/episode-(\d+)\.html").unwrap();
+        let out: usize = regex.captures_iter(&self.url).next().and_then(|n|{
+            Some(n.get(1).unwrap().as_str().parse::<usize>().unwrap())
+        }).unwrap();
+        out
+    }
 }
 
 impl Anime {
