@@ -114,7 +114,30 @@ impl Anime {
         Ok(anime)
     }
     
-    pub async fn get_epidoes(&self) -> Vec<Episode> {
+    pub async fn get_description(&self) -> String {
+        get_parsed(&self.url).await.select_first("#dle-content > div > div:nth-child(2) > div > p > span")
+            .unwrap().text_contents()
+    }
+
+    pub async fn get_genres(&self) -> Vec<String> {
+        get_parsed(&self.url).await.select("#dle-content > div > div:nth-child(2) > div > div > a")
+            .unwrap().map(|el| el.text_contents()).collect()
+    }
+    
+    pub async fn get_name(&self) -> String {
+        let text = get_parsed(&self.url).await
+            .select_first("h1.header_video").unwrap().text_contents();
+        regex::Regex::new(r"Смотреть (.+) все серии").unwrap().
+            captures_iter(text.as_str()).
+                next().unwrap().get(1).unwrap().as_str().to_owned()
+    }
+
+    pub async fn get_original_name(&self) -> String {
+        get_parsed(&self.url).await.select_first("#dle-content > div > div:nth-child(2) > div > div > b")
+            .unwrap().text_contents()
+    }
+
+    pub async fn get_episodes(&self) -> Vec<Episode> {
         let client = create_http_client();
 
         let resp = client.get(&self.url).send().await
